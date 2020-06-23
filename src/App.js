@@ -1,6 +1,5 @@
 import React from 'react';
 import {
-  RecoilRoot,
   atom,
   selector,
   useRecoilState,
@@ -45,11 +44,9 @@ const CharacterCounter = () => (
 
 function App() {
   return (
-    <RecoilRoot>
-      <div className="app-body">
-        <CharacterCounter />
-      </div>
-    </RecoilRoot>
+    <div className="app-body">
+      <CharacterCounter />
+    </div>
   );
 }
 
