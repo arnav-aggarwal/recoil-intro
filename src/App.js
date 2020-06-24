@@ -151,7 +151,6 @@ function TodoListStats() {
 }
 
 function TodoList() {
-  const todoList = useRecoilValue(todoListState);
   const filteredTodoList = useRecoilValue(filteredTodoListState);
 
   return (
