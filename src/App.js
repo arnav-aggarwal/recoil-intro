@@ -88,17 +88,78 @@ function TodoItem({ item }) {
   );
 }
 
+const todoListFilterState = atom({
+  key: 'todoListFilterState',
+  default: 'Show All',
+});
+
+const filteredTodoListState = selector({
+  key: 'filteredTodoListState',
+  get: ({ get }) => {
+    const filter = get(todoListFilterState);
+    const list = get(todoListState);
+
+    switch (filter) {
+      case 'Show Completed':
+        return list.filter(item => item.isComplete);
+      case 'Show Uncompleted':
+        return list.filter(item => !item.isComplete);
+      default:
+        return list;
+    }
+  }
+})
+
+function TodoListFilters() {
+  const [filter, setFilter] = useRecoilState(todoListFilterState);
+  const updateFilter = event => setFilter(event.target.value);
+
+  return (
+    <select value={filter} onChange={updateFilter}>
+      <option value="Show All">All</option>
+      <option value="Show Completed">Completed</option>
+      <option value="Show Uncompleted">Uncompleted</option>
+    </select>
+  )
+}
+
+const todoListStatsState = selector({
+  key: 'todoListStatsState',
+  get: ({ get }) => {
+    const todoList = get(todoListState);
+
+    const total = todoList.length;
+    const completed = todoList.filter(item => item.isComplete).length;
+    const uncompleted = total - completed;
+    const percentComplete = total ? (completed / total) * 100 : 0;
+
+    return { total, completed, uncompleted, percentComplete };
+  },
+})
+
+function TodoListStats() {
+  const { total, completed, uncompleted, percentComplete } = useRecoilValue(todoListStatsState);
+
+  return (
+    <ul>
+      <li>Total items: {total}</li>
+      <li>Completed items: {completed}</li>
+      <li>Uncompleted items: {uncompleted}</li>
+      <li>Percent complete: {percentComplete}%</li>
+    </ul>
+  );
+}
+
 function TodoList() {
   const todoList = useRecoilValue(todoListState);
+  const filteredTodoList = useRecoilValue(filteredTodoListState);
 
   return (
     <>
-      {/* <TodoListStats /> */}
-      {/* <TodoListilters /> */}
+      <TodoListStats />
+      <TodoListFilters />
       <TodoItemCreator />
-      {
-        todoList.map((item => <TodoItem key={item.id} item={item} />))
-      }
+      {filteredTodoList.map((item => <TodoItem key={item.id} item={item} />))}
     </>
   )
 }
