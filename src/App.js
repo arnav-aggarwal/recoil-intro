@@ -108,7 +108,7 @@ const filteredTodoListState = selector({
         return list;
     }
   }
-})
+});
 
 function TodoListFilters() {
   const [filter, setFilter] = useRecoilState(todoListFilterState);
@@ -135,7 +135,7 @@ const todoListStatsState = selector({
 
     return { total, completed, uncompleted, percentComplete };
   },
-})
+});
 
 function TodoListStats() {
   const { total, completed, uncompleted, percentComplete } = useRecoilValue(todoListStatsState);
@@ -158,7 +158,7 @@ function TodoList() {
       <TodoListStats />
       <TodoListFilters />
       <TodoItemCreator />
-      {filteredTodoList.map((item => <TodoItem key={item.id} item={item} />))}
+      {filteredTodoList.map((todoItem => <TodoItem key={todoItem.id} item={todoItem} />))}
     </>
   )
 }
